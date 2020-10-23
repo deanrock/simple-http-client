@@ -1,0 +1,13 @@
+{
+    "name": "dean/simple-http-client",
+    "require": {
+        "guzzlehttp/guzzle": "^7.2",
+        "ext-json": "*",
+        "ext-pcntl": "*"
+    },
+    "config": {
+        "platform": {
+            "php": "7.4"
+        }
+    }
+}
