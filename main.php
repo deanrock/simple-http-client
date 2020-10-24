@@ -25,10 +25,16 @@ function makeRequest()
 
 function timeExecution(Closure $f)
 {
+    ob_start();
     $start = microtime(true);
     $f();
     $diff = ceil((microtime(true) - $start) * 1000);
     echo "diff {$diff}\n";
+    $output = ob_get_clean();
+
+    if ($diff > 200) {
+        echo $output;
+    }
 }
 
 function handleException(Closure $f)
