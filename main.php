@@ -6,12 +6,12 @@ use GuzzleHttp\Client;
 
 require_once 'vendor/autoload.php';
 
-function makeRequest()
+function makeRequest(int $iteration)
 {
     $client = new Client();
     $timeout = 5;
 
-    $res = $client->request('GET', getenv('URL'), [
+    $res = $client->request('GET', getenv('URL') . "?iter={$iteration}", [
         'headers' => [],
         'connect_timeout' => $timeout,
         'read_timeout' => $timeout,
@@ -23,13 +23,13 @@ function makeRequest()
     }
 }
 
-function timeExecution(Closure $f)
+function timeExecution(int $iteration, Closure $f)
 {
     ob_start();
     $start = microtime(true);
     $f();
     $diff = ceil((microtime(true) - $start) * 1000);
-    echo "diff {$diff}\n";
+    echo "\n[iter {$iteration}] diff {$diff}\n";
     $output = ob_get_clean();
 
     if ($diff > 200) {
@@ -53,10 +53,14 @@ function shutdown()
 
 pcntl_signal(SIGINT,"shutdown");
 
+$iteration = 0;
+
 while (true) {
-    timeExecution(function() {
-        handleException(function() {
-            makeRequest();
+    $iteration++;
+    
+    timeExecution($iteration, function() use ($iteration) {
+        handleException(function() use ($iteration) {
+            makeRequest($iteration);
         });
     });
 }
