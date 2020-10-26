@@ -36,12 +36,16 @@ function makeRequest(int $iteration, $url)
     $e = explode("-", getenv('HOSTNAME'));
     $hostname = end($e);
 
-    $res = $client->request('GET', $url . "?iter={$iteration}-{$hostname}", [
+    $url = $url . "?iter={$iteration}-{$hostname}";
+
+    $res = $client->request('GET', $url, [
         'headers' => [],
         'connect_timeout' => $timeout,
         'read_timeout' => $timeout,
         'timeout' => $timeout,
     ]);
+
+    echo $url . "\n";
 
     if ($res->getStatusCode() == 200) {
         json_decode((string)$res->getBody());
