@@ -11,7 +11,10 @@ function makeRequest(int $iteration)
     $client = new Client();
     $timeout = 5;
 
-    $res = $client->request('GET', getenv('URL') . "?iter={$iteration}", [
+    $e = explode("-", getenv('HOSTNAME'));
+    $hostname = end($e);
+
+    $res = $client->request('GET', getenv('URL') . "?iter={$iteration}-{$hostname}", [
         'headers' => [],
         'connect_timeout' => $timeout,
         'read_timeout' => $timeout,
